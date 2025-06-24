@@ -18,7 +18,7 @@ This project enables automated trading by connecting TradingView alerts to MetaT
 
 ## Requirements
 
-- Python 3.11
+- Python 3.11 https://www.python.org/downloads/release/python-3110/
 - MetaTrader 5 platform installed
 - TradingView account (Pro or Premium for webhook alerts)
 - Ngrok account (free tier is sufficient) for creating the webhook tunnel https://ngrok.com/
