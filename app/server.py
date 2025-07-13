@@ -126,4 +126,9 @@ def webhook():
 def trade():
     return webhook()
 
-# Note: You would add other endpoints like /positions, /account etc. here if needed.
+# --- NEW CODE ADDED FOR UPTIME MONITORING ---
+@app.route('/health')
+def health_check():
+    """A simple health check endpoint for uptime monitoring."""
+    return "OK", 200
+# --- END NEW CODE ---
