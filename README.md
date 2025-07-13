@@ -383,6 +383,10 @@ string GetErrorDescription(int error_code)
    ```bash
    python main.py
  ```
+## Option
+  you can use the website to shaking how it's going: https://uptimerobot.com (https://----.ngrok-free.app/health)
+  <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/561dcd8e-04a6-4c27-a80c-daa34fdab4a0" />
+  
 
 
 
