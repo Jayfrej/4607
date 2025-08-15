@@ -405,6 +405,10 @@ string GetErrorDescription(int error_code)
 
 3. **Format your alert message as JSON**:
 
+ ```bash
+   py get_symbols.py
+ ```
+
    ```json
    {
    "symbol": "{{ticker}}",
