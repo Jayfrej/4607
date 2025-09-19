@@ -2,9 +2,7 @@
 
 A robust, automated trading solution that connects TradingView alerts directly to MetaTrader 5, enabling seamless execution of trades based on your custom indicators and strategies.
 
-<img width="1368" height="858" alt="image" src="https://github.com/user-attachments/assets/49f466a4-2cd9-47f7-8de9-a05ba4273081" />
-
-
+<img width="1368" height="858" alt="image_png" src="https://github.com/user-attachments/assets/11243d17-cfc4-43db-a2cd-2b089b7ed161" />
 
 ## 🎯 Overview
 
@@ -145,114 +143,19 @@ SMTP_PORT=587
 
 ### Step 4: MetaTrader 5 Setup
 
-1. **Enable Expert Advisor for webhooks**:
-   - Press `F4` in MT5 to open MetaEditor
-   - Create new Expert Advisor
-   - Paste the following code:
+**Download the EA file**  
+   - Make sure you have `TradingWebhookEA.ex5`.
 
-```mql5
-//+------------------------------------------------------------------+
-//|                                           TradingWebhookEA.mq5   |
-//|                        Webhook Integration for Python Server     |
-//+------------------------------------------------------------------+
-#property strict
+2. **Open MT5 Data Folder**  
+   - In MetaTrader 5, go to **File → Open Data Folder**.
+   - Navigate to: `MQL5/Experts/`.
 
-input string WebhookURL = "http://127.0.0.1:5000/webhook";
-input int PollingInterval = 5;
-input double DefaultVolume = 0.01;
-input int Slippage = 10;
-input string TradeComment = "WebhookEA";
-input int MagicNumber = 12345;
+3. **Copy EA into Experts Folder**  
+   - Place `TradingWebhookEA.ex5` into the **Experts** folder.
 
-datetime last_poll_time = 0;
-
-int OnInit()
-{
-   Print("WebhookEA initialized. Polling URL: ", WebhookURL);
-   return(INIT_SUCCEEDED);
-}
-
-void OnTick()
-{
-   if (TimeCurrent() - last_poll_time < PollingInterval)
-      return;
-   
-   string headers = "";
-   char data[];
-   char result[];
-   string result_headers;
-   int timeout = 5000;
-   
-   int response = WebRequest("GET", WebhookURL, headers, timeout, data, result, result_headers);
-   
-   if (response == 200 && ArraySize(result) > 0)
-   {
-      string json_result = CharArrayToString(result);
-      string action = GetValue(json_result, "action");
-      string symbol = GetValue(json_result, "symbol");
-      double volume = StringToDouble(GetValue(json_result, "volume"));
-      
-      if (volume <= 0) volume = DefaultVolume;
-      if (symbol == "" || action == "") return;
-      if (symbol != Symbol()) symbol = Symbol();
-      
-      if (action == "buy") ExecuteBuyOrder(symbol, volume);
-      else if (action == "sell") ExecuteSellOrder(symbol, volume);
-   }
-   
-   last_poll_time = TimeCurrent();
-}
-
-void ExecuteBuyOrder(string symbol, double volume)
-{
-   MqlTradeRequest request = {};
-   MqlTradeResult result = {};
-   
-   request.action = TRADE_ACTION_DEAL;
-   request.symbol = symbol;
-   request.volume = volume;
-   request.type = ORDER_TYPE_BUY;
-   request.price = SymbolInfoDouble(symbol, SYMBOL_ASK);
-   request.deviation = Slippage;
-   request.magic = MagicNumber;
-   request.comment = TradeComment;
-   
-   OrderSend(request, result);
-}
-
-void ExecuteSellOrder(string symbol, double volume)
-{
-   MqlTradeRequest request = {};
-   MqlTradeResult result = {};
-   
-   request.action = TRADE_ACTION_DEAL;
-   request.symbol = symbol;
-   request.volume = volume;
-   request.type = ORDER_TYPE_SELL;
-   request.price = SymbolInfoDouble(symbol, SYMBOL_BID);
-   request.deviation = Slippage;
-   request.magic = MagicNumber;
-   request.comment = TradeComment;
-   
-   OrderSend(request, result);
-}
-
-string GetValue(string json, string key)
-{
-   string pattern = "\"" + key + "\":\"";
-   int start = StringFind(json, pattern);
-   if (start == -1) return "";
-   
-   start += StringLen(pattern);
-   int end = StringFind(json, "\"", start);
-   if (end == -1) return "";
-   
-   return StringSubstr(json, start, end - start);
-}
-```
-
-2. **Save and compile** the Expert Advisor
-3. **Add to chart** and enable automated trading
+4. **Refresh MT5**  
+   - In the **Navigator Panel**, right-click **Expert Advisors → Refresh**.  
+   - Alternatively, restart MT5.
 
 ## ▶️ Running the Application
 
